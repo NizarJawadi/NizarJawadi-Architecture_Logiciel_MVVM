@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails du Produit</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">Détails du Produit</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Libellé : <span th:text="${produit.libelle}"></span></h5>
+            <p class="card-text">Prix : <span th:text="${produit.prix}"></span> TND</p>
+            <p class="card-text">Quantité en Stock : <span th:text="${produit.qteStock}"></span></p>
+            <a th:href="@{/produits}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+.card {
+    height: 100%;
+    width: 100%;
+    max-width: 250px; /* Limite la largeur */
+    border-radius: 12px; /* Coins plus arrondis */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Ombre douce */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden; /* Assure que l'image reste dans les bords arrondis */
+    background-color: #ffffff; /* Fond blanc pour un contraste clair */
+  }
+  
+  .card:hover {
+    transform: scale(1.08); /* Agrandissement subtil */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Accentuation de l'ombre */
+  }
+  
+  .card img {
+    height: 150px; /* Taille réduite pour laisser plus d'espace au contenu */
+    width: 100%; /* Assure une largeur adaptée */
+    object-fit: cover; /* Recadre l'image sans la déformer */
+    border-bottom: 1px solid #ddd; /* Ligne séparatrice */
+  }
+  
+  .card-body {
+    padding: 15px;
+    text-align: center; /* Centrer le contenu */
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333; /* Titre sombre */
+  }
+  
+  .card-text {
+    font-size: 0.9rem;
+    color: #666; /* Texte secondaire en gris */
+    margin-bottom: 15px;
+  }
+  
+  .btn {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    margin: 5px;
+    border-radius: 20px; /* Boutons arrondis */
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+  

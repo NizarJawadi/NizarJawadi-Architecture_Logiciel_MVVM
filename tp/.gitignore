@@ -1,0 +1,42 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Ignorer les fichiers temporaires et de sauvegarde pour ProduitController.java
+tp/src/main/java/com/architecture/tp/controller/.ProduitController*.swp
+tp/src/main/java/com/architecture/tp/controller/ProduitController*_BASE_*.java
+tp/src/main/java/com/architecture/tp/controller/ProduitController*_LOCAL_*.java
+tp/src/main/java/com/architecture/tp/controller/ProduitController*_REMOTE_*.java
+tp/src/main/java/com/architecture/tp/controller/ProduitController*_BACKUP_*.java
+tp/src/main/java/com/architecture/tp/controller/ProduitController.java.orig
+

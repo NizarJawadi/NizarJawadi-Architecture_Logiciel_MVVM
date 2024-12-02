@@ -1,0 +1,18 @@
+
+
+<main class="main">
+    <div class="container mt-5">
+        <div *ngIf="product" class="card">
+          <img [src]="product.imageUrl" class="card-img-top" alt="{{ product.nom }}">
+          <div class="card-body" >
+            <h5 class="card-title">{{ product.nom }}</h5>
+            <p class="card-text">{{ product.description }}</p>
+            <button class="btn btn-secondary" [routerLink]="['/']">Retour</button>
+          </div>
+        </div>
+        <div *ngIf="!product" class="alert alert-danger">
+          Produit introuvable !
+        </div>
+      </div>
+      
+</main>

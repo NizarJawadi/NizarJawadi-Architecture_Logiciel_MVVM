@@ -1,0 +1,31 @@
+<main class="main">
+    <div class="container" style="padding-top: 30px;">
+      
+      <span style="color:  red;"><b>------------ ESPACE POUR RECHERCHE ------------ </b></span>
+      <button class="btn btn-primary" ><i class="bi bi-bag-plus"></i> Produit</button>
+        <div class="row" >
+        <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let produit of produits">
+          <div class="card mb-8">
+            <img [src]="produit.imageUrl" class="card-img-top" alt="{{ produit.nom }}">
+            <div class="card-body" >
+              <h5 class="card-title">{{ produit.nom }}</h5>
+              <p class="card-text">{{ produit.description }}</p>
+              <button 
+                class="btn btn-primary me-2" 
+                [routerLink]="['/details', produit.id]">
+                Détails
+              </button>
+              <button 
+                class="btn btn-danger" 
+                (click)="supprimerProduit(produit.id)">
+                Supprimer
+              </button>
+            </div>
+           
+          </div>
+        
+        </div>
+      </div>
+    </div>
+  </main>
+  
