@@ -1,0 +1,28 @@
+<main class="container py-4">
+    <h2>Gestion des Catégories</h2>
+  
+    <!-- Messages de succès ou d'erreur -->
+    <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+  
+    <!-- Formulaire d'ajout -->
+    <form [formGroup]="categorieForm" (ngSubmit)="onSubmit()" class="mb-4">
+      <div class="mb-3">
+        <label for="nom" class="form-label">Nom de la Catégorie</label>
+        <input id="nom" formControlName="nom" type="text" class="form-control" />
+        <div *ngIf="categorieForm.get('nom')?.invalid && categorieForm.get('nom')?.touched" class="text-danger">
+          Le nom est requis.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="categorieForm.invalid">Ajouter</button>
+    </form>
+  
+    <!-- Liste des catégories -->
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let categorie of categories">
+        {{ categorie.nom }}
+        <button class="btn btn-danger btn-sm" (click)="deleteCategorie(categorie.id)">Supprimer</button>
+      </li>
+    </ul>
+  </main>
+  

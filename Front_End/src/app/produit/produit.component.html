@@ -1,31 +1,142 @@
 <main class="main">
-    <div class="container" style="padding-top: 30px;">
+  <div class="container py-4">
+    <!-- Espace pour Recherche -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <span class="text-danger fw-bold">------------ ESPACE POUR RECHERCHE ------------</span>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#produitModal">
+        <i class="bi bi-bag-plus"></i> Ajouter Produit
+      </button>
       
-      <span style="color:  red;"><b>------------ ESPACE POUR RECHERCHE ------------ </b></span>
-      <button class="btn btn-primary" ><i class="bi bi-bag-plus"></i> Produit</button>
-        <div class="row" >
-        <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let produit of produits">
-          <div class="card mb-8">
-            <img [src]="produit.imageUrl" class="card-img-top" alt="{{ produit.nom }}">
-            <div class="card-body" >
-              <h5 class="card-title">{{ produit.nom }}</h5>
-              <p class="card-text">{{ produit.description }}</p>
+      
+    </div>
+
+    <!-- Liste des Produits -->
+    <div class="row">
+      <div class="col-lg-3 col-md-4 col-sm-6 mb-4" *ngFor="let produit of produits">
+        <div class="card h-100">
+          <img 
+            [src]="'assets/images/' + produit.imagePath" 
+            class="card-img-top" 
+            alt="{{ produit.nom }}" 
+            style="height: 200px; object-fit: cover;"
+          >
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ produit.nom }}</h5>
+            <p class="card-text flex-grow-1">{{ produit.description }}</p>
+            <div class="d-flex justify-content-between mt-2">
               <button 
                 class="btn btn-primary me-2" 
-                [routerLink]="['/details', produit.id]">
+                [routerLink]="['/details', produit.id]"
+              >
                 Détails
               </button>
               <button 
                 class="btn btn-danger" 
-                (click)="supprimerProduit(produit.id)">
+                
+              >
                 Supprimer
               </button>
             </div>
-           
           </div>
-        
         </div>
       </div>
     </div>
-  </main>
-  
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal fade" id="produitModal" tabindex="-1" aria-labelledby="produitModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Messages -->
+      <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+
+      <!-- Header du Modal -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="produitModalLabel">Ajouter un Produit</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Body du Modal -->
+      <div class="modal-body">
+        <form [formGroup]="produitForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="libelle" class="form-label">
+              <i class="bi bi-box-seam"></i> Nom du Produit
+            </label>
+            <input id="libelle" formControlName="libelle" type="text" class="form-control" />
+            <div *ngIf="produitForm.get('libelle')?.invalid && produitForm.get('libelle')?.touched" class="text-danger">
+              Le nom du produit est requis.
+            </div>
+          </div>
+        
+          <div class="mb-3">
+            <label for="description" class="form-label">
+              <i class="bi bi-card-text"></i> Description
+            </label>
+            <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
+            <div *ngIf="produitForm.get('description')?.invalid && produitForm.get('description')?.touched" class="text-danger">
+              La description est requise.
+            </div>
+          </div>
+        
+          <div class="mb-3">
+            <label for="prix" class="form-label">
+              <i class="bi bi-currency-dollar"></i> Prix
+            </label>
+            <input id="prix" formControlName="prix" type="number" step="0.01" class="form-control" />
+            <div *ngIf="produitForm.get('prix')?.invalid && produitForm.get('prix')?.touched" class="text-danger">
+              Le prix est requis et doit être supérieur à zéro.
+            </div>
+          </div>
+        
+          <div class="mb-3">
+            <label for="categorie" class="form-label">
+              <i class="bi bi-tags-fill"></i> Catégorie
+            </label>
+            <select id="categorie" formControlName="categorieId" class="form-select">
+              <option *ngFor="let categorie of categories" [value]="categorie.id">
+                {{ categorie.nom }}
+              </option>
+            </select>
+            <div *ngIf="produitForm.get('categorieId')?.invalid && produitForm.get('categorieId')?.touched" class="text-danger">
+              La catégorie est requise.
+            </div>
+          </div>
+        
+          <div class="mb-3">
+            <label for="imagePath" class="form-label">
+              <i class="bi bi-image"></i> Sélectionner une image
+            </label>
+            <input id="imagePath" type="file" class="form-control" (change)="onFileSelect($event)" />
+            <div *ngIf="produitForm.get('imagePath')?.invalid && produitForm.get('imagePath')?.touched" class="text-danger">
+              L'image est requise.
+            </div>
+          </div>
+        
+          <div class="mb-3">
+            <label for="qteStock" class="form-label">
+              <i class="bi bi-archive"></i> Quantité en Stock
+            </label>
+            <input id="qteStock" formControlName="qteStock" type="number" class="form-control" />
+            <div *ngIf="produitForm.get('qteStock')?.invalid && produitForm.get('qteStock')?.touched" class="text-danger">
+              La quantité en stock est requise.
+            </div>
+          </div>
+        
+          <button type="submit" class="btn btn-primary w-100" [disabled]="produitForm.invalid">
+            <i class="bi bi-save"></i> Sauvegarder
+          </button>
+        </form>
+        
+      </div>
+
+      <!-- Footer du Modal -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+

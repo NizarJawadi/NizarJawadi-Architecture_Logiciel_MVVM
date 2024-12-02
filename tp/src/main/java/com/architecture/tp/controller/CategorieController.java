@@ -10,24 +10,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.architecture.tp.model.Produit;
-import com.architecture.tp.service.ProduitService;
+import com.architecture.tp.model.Categorie;
+import com.architecture.tp.service.CategorieService;
 
 @RestController
-@RequestMapping("/api/produits")
-@CrossOrigin(origins = "http://localhost:4200") 
-public class ProduitController {
+@RequestMapping("/categories")
+@CrossOrigin(origins  = "http://localhost:4200")
+public class CategorieController {
 
     @Autowired
-    private ProduitService produitService;
+    private CategorieService categorieService;
 
     @GetMapping
-    public List<Produit> getAllProduits() {
-        return produitService.getAllProduits();
+    public List<Categorie> getAllCategories() {
+        return categorieService.findAll();
     }
 
     @PostMapping
-    public Produit createProduit(@RequestBody Produit produit) {
-        return produitService.saveProduit(produit);
+    public Categorie createCategorie(@RequestBody Categorie categorie) {
+        return categorieService.save(categorie);
     }
 }

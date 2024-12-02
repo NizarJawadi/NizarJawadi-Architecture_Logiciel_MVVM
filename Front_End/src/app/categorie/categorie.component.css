@@ -1,0 +1,12 @@
+.container {
+    max-width: 600px;
+  }
+  .alert {
+    margin-bottom: 1rem;
+  }
+  .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  

@@ -13,11 +13,14 @@ import com.architecture.tp.repository.ProduitRepository;
 public class ProduitService {
     @Autowired
     private ProduitRepository produitRepository;
-    public List<Produit> findAll() {
-    return produitRepository.findAll();
+   
+   
+    public List<Produit> getAllProduits() {
+        return produitRepository.findAll();
     }
-    public Produit save(Produit produit) {
-    return produitRepository.save(produit);
+    public Produit saveProduit(Produit produit) {
+        
+        return produitRepository.save(produit);
     }
     public Produit findById(Long id) {
     Optional<Produit> produit = produitRepository.findById(id);
