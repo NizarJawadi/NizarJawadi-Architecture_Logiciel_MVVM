@@ -1,1 +1,78 @@
-<p>stock works!</p>
+<main class="container py-4">
+    <h2>Gestion des Stocks</h2>
+  
+    <!-- Bouton d'ajout -->
+    <button class="btn btn-primary mb-3" (click)="openForm()">Ajouter un Stock</button> 
+  
+
+
+
+    <!-- Tableau des stocks -->
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Quantité</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of stocks">
+          <td>{{ stock.id }}</td>
+          <td>{{ stock.dateDepot }}</td>
+          <td>{{ stock.typeOperation }}</td>
+          <td>{{ stock.quantite }}</td>
+          <td>
+            <button class="btn btn-info btn-sm" (click)="viewDetails(stock)">Détails</button>
+            <button class="btn btn-warning btn-sm" (click)="editStock(stock)">Modifier</button>
+            <button 
+                *ngIf="stock.id !== undefined"
+                class="btn btn-danger btn-sm" 
+                (click)="deleteStock(stock.id)">
+                Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Formulaire d'ajout/modification -->
+    <div *ngIf="isFormVisible" class="mt-4">
+      <h3>{{ selectedStock ? 'Modifier le Stock' : 'Ajouter un Stock' }}</h3>
+      <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="dateDepot" class="form-label">Date d'Opération</label>
+          <input
+            id="dateDepot"
+            formControlName="dateDepot"
+            type="date"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="typeOperation" class="form-label">Type d'Opération</label>
+          <select id="typeOperation" formControlName="typeOperation" class="form-select">
+            <option value="ENTREE">Entrée</option>
+            <option value="SORTIE">Sortie</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="quantite" class="form-label">Quantité</label>
+          <input
+            id="quantite"
+            formControlName="quantite"
+            type="number"
+            class="form-control"
+          />
+        </div>
+        <button type="submit" class="btn btn-success">
+          {{ selectedStock ? 'Mettre à jour' : 'Ajouter' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeForm()">Annuler</button>
+      </form>
+    </div>
+  </main>
+  
+  

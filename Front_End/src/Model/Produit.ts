@@ -4,5 +4,6 @@ export interface Produit {
     description: string;
     prix: number;
     imagePath: string; 
+    qteStock: number;
   }
   
