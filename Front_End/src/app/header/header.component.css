@@ -1,44 +1,69 @@
-/* header.component.css */
+.header {
+  height: 70px;
+  padding: 20px 50px;
+  background-color: rgb(1, 38, 69);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 5px 5px 5px #939393;
+}
 
-/* Style global pour le header */
-.navbar {
-    background-color: #ffffff;
-    border-bottom: 2px solid #e0e0e0;
-  }
-  
-  .navbar-brand {
-    font-size: 1.8rem;
-    color: #007bff;
-    font-weight: bold;
-  }
-  
-  .navbar-nav .nav-link {
-    font-size: 1.1rem;
-    color: #333;
-    padding: 10px 15px;
-    transition: all 0.3s ease;
-  }
-  
-  /* Survol des liens */
-  .navbar-nav .nav-link:hover {
-    color: #ffffff;
-    background-color: #007bff;
-    border-radius: 5px;
-  }
-  
-  /* Ajouter un ombre à la navbar pour la rendre plus élégante */
-  .navbar-light.bg-light {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Styles pour la version mobile */
-  @media (max-width: 768px) {
-    .navbar-nav {
-      text-align: center;
-    }
-    
-    .navbar-nav .nav-item {
-      margin-bottom: 10px;
-    }
-  }
-  
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.nav {
+  flex: 1;
+  margin-left: 50px;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin-right: 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 8px 12px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: rgb(11, 107, 185);
+  color: #ffffff;
+  border-radius: 5px;
+}
+
+.nav-link.active {
+  background-color: rgb(11, 107, 185);
+  border-radius: 5px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.user-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background-color: rgb(11, 107, 185);
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
