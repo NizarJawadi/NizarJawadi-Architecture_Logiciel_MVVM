@@ -60,11 +60,12 @@ export class StockComponent implements OnInit {
   }
 
   addProduct(): void {
-    if (this.selectedProduit && this.selectedQuantite > 0) {
+    if (this.selectedProduit && this.selectedQuantite ) {
       this.lignesStock.push({
         produit: this.selectedProduit,
         qte: this.selectedQuantite,
       });
+      // Réinitialisation après ajout
       this.selectedProduit = null;
       this.selectedQuantite = 0;
     } else {
@@ -83,9 +84,18 @@ export class StockComponent implements OnInit {
     return stock.lignesStock?.reduce((total, ligne) => total + ligne.qte, 0) || 0;
   }
 
+  // viewDetails(stock: Stock): void {
+  //   this.selectedStock = stock;
+  // }
   viewDetails(stock: Stock): void {
-    this.selectedStock = stock;
+    this.stockService.getStockById(stock.id!).subscribe((data: Stock) => {
+      console.log('Stock details:', data);
+      this.selectedStock = data;
+    }, error => {
+      console.error('Error fetching stock details:', error);
+    });
   }
+  
 
   deleteStock(id: number | undefined): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce stock ?')) {
@@ -96,10 +106,13 @@ export class StockComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.stockForm.valid) {
+    if (this.stockForm.valid ) {
       const newStock: Stock = {
         ...this.stockForm.value,
-        lignesStock: this.lignesStock,
+        lignesStock: this.lignesStock.map((ligne) => ({
+          produitId: ligne.produit.id,
+          qte: ligne.qte,
+        })),
       };
 
       if (this.selectedStock) {

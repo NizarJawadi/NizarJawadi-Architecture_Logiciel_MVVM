@@ -31,6 +31,11 @@ export class StockService {
     return this.http.get<Stock[]>(this.apiUrl);
   }
 
+  getStockById(id: number): Observable<Stock> {
+    return this.http.get<Stock>(`${this.apiUrl}/${id}`);
+  }
+  
+
   createStock(stock: Stock): Observable<Stock> {
     return this.http.post<Stock>(this.apiUrl, stock);
   }
