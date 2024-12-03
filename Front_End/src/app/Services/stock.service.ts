@@ -2,11 +2,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface Produit {
+  id: number;
+  libelle: string;
+}
+
+export interface LigneStock {
+  produit: Produit;
+  qte: number;
+}
+
 export interface Stock {
   id?: number;
   dateDepot: string;
   typeOperation: string;
-  quantite: number;
+  lignesStock: LigneStock[];
 }
 
 @Injectable({
@@ -21,16 +31,21 @@ export class StockService {
     return this.http.get<Stock[]>(this.apiUrl);
   }
 
-  createStock(stock: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}`, stock);
+  createStock(stock: Stock): Observable<Stock> {
+    return this.http.post<Stock>(this.apiUrl, stock);
+  }
+
+  deleteStock(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
   
 
   updateStock(id: number, stock: Stock): Observable<Stock> {
     return this.http.put<Stock>(`${this.apiUrl}/${id}`, stock);
   }
-
-  deleteStock(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  getProduits(): Observable<Produit[]> {
+    return this.http.get<Produit[]>('http://localhost:8080/api/produits');
   }
+  
+
 }

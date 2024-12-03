@@ -1,111 +1,122 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common'; // Importation nécessaire
-import { ReactiveFormsModule } from '@angular/forms'; // Pour utiliser [formGroup] et les formulaires réactifs
-import { StockService , Stock } from '../Services/stock.service';
+import { StockService, Stock, Produit, LigneStock } from '../Services/stock.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-stock',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], // Ajoutez CommonModule et ReactiveFormsModule ici
+  standalone: true, // Ajout de standalone: true
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css'],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule] // Ajout des modules nécessaires
 })
 export class StockComponent implements OnInit {
-  stocks: Stock[] = []; // Liste des stocks
-  stockForm!: FormGroup; // Formulaire d'ajout/modification
-  selectedStock: Stock | null = null; // Stock sélectionné
-  isFormVisible = false; // Indique si le formulaire est visible
-  isAdding: boolean = false; // Initialize the property
+  stocks: Stock[] = [];
+  produits: Produit[] = []; // Liste des produits disponibles
+  stockForm!: FormGroup;
+  lignesStock: LigneStock[] = [];
+  selectedProduit: Produit | null = null;
+  selectedQuantite: number = 0;
+  isFormVisible = false;
+  selectedStock: Stock | null = null;
 
   constructor(private stockService: StockService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.loadStocks();
+    this.loadProduits();
     this.initializeForm();
   }
 
-  // Charger la liste des stocks
   loadStocks(): void {
-    this.stockService.getStocks().subscribe(
-      (data) => (this.stocks = data),
-      (error) => console.error('Erreur lors du chargement des stocks :', error)
-    );
+    this.stockService.getStocks().subscribe((data) => (this.stocks = data));
   }
 
-  // Initialiser le formulaire
+  loadProduits(): void {
+    // Charger les produits depuis le backend
+    this.stockService.getProduits().subscribe((data) => (this.produits = data));
+  }
+
   initializeForm(): void {
     this.stockForm = this.fb.group({
       dateDepot: ['', Validators.required],
       typeOperation: ['ENTREE', Validators.required],
-      quantite: [0, [Validators.required, Validators.min(1)]],
     });
   }
 
-  // Afficher le formulaire pour ajouter un stock
   openForm(): void {
     this.isFormVisible = true;
     this.selectedStock = null;
+    this.lignesStock = [];
     this.stockForm.reset();
   }
 
-  // Fermer le formulaire
   closeForm(): void {
     this.isFormVisible = false;
     this.stockForm.reset();
   }
 
-  // Supprimer un stock
-  deleteStock(id: number | undefined): void {
-    if (id === undefined) {
-      console.error('ID invalide :', id);
-      return;
-    }
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce stock ?')) {
-      this.stockService.deleteStock(id).subscribe(
-        () => this.loadStocks(),
-        (error) => console.error('Erreur lors de la suppression du stock :', error)
-      );
+  addProduct(): void {
+    if (this.selectedProduit && this.selectedQuantite > 0) {
+      this.lignesStock.push({
+        produit: this.selectedProduit,
+        qte: this.selectedQuantite,
+      });
+      this.selectedProduit = null;
+      this.selectedQuantite = 0;
+    } else {
+      alert('Veuillez sélectionner un produit et une quantité valide.');
     }
   }
-  
 
-  // Modifier un stock
-  editStock(stock: Stock): void {
-    this.selectedStock = stock;
-    this.stockForm.patchValue(stock);
-    this.isFormVisible = true;
+  removeProduct(ligne: LigneStock): void {
+    const index = this.lignesStock.indexOf(ligne);
+    if (index > -1) {
+      this.lignesStock.splice(index, 1);
+    }
   }
 
-  // Afficher les détails d'un stock
+  getTotalQuantity(stock: Stock): number {
+    return stock.lignesStock?.reduce((total, ligne) => total + ligne.qte, 0) || 0;
+  }
+
   viewDetails(stock: Stock): void {
-    alert(`Détails du Stock :
-      ID : ${stock.id}
-      Date : ${stock.dateDepot}
-      Type : ${stock.typeOperation}
-      Quantité : ${stock.quantite}`);
+    this.selectedStock = stock;
   }
 
-  // Soumettre le formulaire pour ajouter ou modifier un stock
+  deleteStock(id: number | undefined): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce stock ?')) {
+      this.stockService.deleteStock(id!).subscribe(() => {
+        this.stocks = this.stocks.filter((s) => s.id !== id);
+      });
+    }
+  }
+
   onSubmit(): void {
     if (this.stockForm.valid) {
-      const newStock = this.stockForm.value; // Données du formulaire
-      this.stockService.createStock(newStock).subscribe(
-        (response) => {
-          console.log('Stock ajouté avec succès :', response);
-          this.stocks.push(response); // Ajouter directement le stock à la liste
-          this.stockForm.reset(); // Réinitialiser le formulaire
-          this.isFormVisible = false; // Fermer le formulaire
-        },
-        (error) => {
-          console.error('Erreur lors de l\'ajout du stock :', error);
-        }
-      );
+      const newStock: Stock = {
+        ...this.stockForm.value,
+        lignesStock: this.lignesStock,
+      };
+
+      if (this.selectedStock) {
+        // Modifier un stock existant
+        this.stockService.updateStock(this.selectedStock.id!, newStock).subscribe((response) => {
+          this.loadStocks();
+          this.closeForm();
+        });
+      } else {
+        // Ajouter un nouveau stock
+        this.stockService.createStock(newStock).subscribe((response) => {
+          this.stocks.push(response);
+          this.closeForm();
+        });
+      }
     } else {
-      console.error('Le formulaire est invalide');
+      alert('Veuillez remplir tous les champs requis.');
     }
   }
-  
-  
 }

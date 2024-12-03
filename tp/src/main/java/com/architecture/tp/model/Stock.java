@@ -38,7 +38,7 @@ public class Stock {
     @Enumerated(EnumType.STRING)
     private TypeOperation typeOperation; // ENUM : ENTRÉE/SORTIE
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LigneStock> lignesStock = new ArrayList<>();
 
     // Getters et Setters

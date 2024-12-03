@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.architecture.tp.model.LigneStock;
 import com.architecture.tp.model.Stock;
+import com.architecture.tp.repository.StockRepository;
 import com.architecture.tp.service.StockService;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -21,16 +23,29 @@ import com.architecture.tp.service.StockService;
 public class StockController {
     @Autowired
     private StockService stockService;
+    private StockRepository stockRepository ;
 
     @GetMapping
     public List<Stock> getAllStocks() {
         return stockService.getAllStocks();
     }
 
+    // @PostMapping
+    // public Stock createStock(@RequestBody Stock stock) {
+    //     return stockService.saveStock(stock);
+    // }
+
     @PostMapping
     public Stock createStock(@RequestBody Stock stock) {
+        stock.getLignesStock().forEach(ligne -> ligne.setStock(stock));
         return stockService.saveStock(stock);
     }
+    
+
+    public Stock saveStock(Stock stock) {
+        return stockRepository.save(stock); // Cascade sur les lignes de stock
+    }
+    
 
     @GetMapping("/{id}")
     public Stock getStockById(@PathVariable Long id) {
