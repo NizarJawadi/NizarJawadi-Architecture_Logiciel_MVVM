@@ -1,1 +1,90 @@
-<p>stock works!</p>
+<main class="container py-4">
+  <h2>Gestion des Stocks</h2>
+
+  <button class="btn btn-primary mb-3" (click)="openForm()">Ajouter un Stock</button>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Quantité</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of stocks">
+        <td>{{ stock.id }}</td>
+        <td>{{ stock.dateDepot }}</td>
+        <td>{{ stock.typeOperation }}</td>
+        <td>{{ getTotalQuantity(stock) }}</td>
+        <td>
+          <button class="btn btn-info btn-sm" (click)="viewDetails(stock)">Détails</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteStock(stock.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Formulaire d'ajout/modification -->
+  <div *ngIf="isFormVisible" class="mt-4">
+    <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label>Date d'Opération</label>
+        <input formControlName="dateDepot" type="date" class="form-control" />
+      </div>
+      <div class="mb-3">
+        <label>Type d'Opération</label>
+        <select formControlName="typeOperation" class="form-control">
+          <option value="ENTREE">Entrée</option>
+          <option value="SORTIE">Sortie</option>
+        </select>
+      </div>
+
+      <!-- Produits -->
+      <h4>Produits</h4>
+      <div class="d-flex align-items-center mb-3">
+        <select [(ngModel)]="selectedProduit" class="form-select me-2">
+          <option *ngFor="let produit of produits" [ngValue]="produit">
+            {{ produit.libelle }}
+          </option>
+        </select>
+        <input [(ngModel)]="selectedQuantite" type="number" class="form-control me-2" placeholder="Quantité" />
+        <button type="button" (click)="addProduct()" class="btn btn-primary">Ajouter</button>
+      </div>
+
+      <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let ligne of lignesStock">
+          {{ ligne.produit.libelle }} - {{ ligne.qte }} unités
+          <button (click)="removeProduct(ligne)" class="btn btn-danger btn-sm">Supprimer</button>
+        </li>
+      </ul>
+
+      <button type="submit" class="btn btn-success">Enregistrer</button>
+      <button type="button" (click)="closeForm()" class="btn btn-secondary">Annuler</button>
+    </form>
+  </div>
+
+  <!-- Modal de détails -->
+  <div *ngIf="selectedStock" class="modal show d-block">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Détails du Stock</h5>
+          <button type="button" class="btn-close" (click)="selectedStock = null"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Date :</strong> {{ selectedStock.dateDepot }}</p>
+          <p><strong>Type d'Opération :</strong> {{ selectedStock.typeOperation }}</p>
+          <h5>Produits :</h5>
+          <ul>
+            <li *ngFor="let ligne of selectedStock.lignesStock">
+              {{ ligne.produit.libelle }} : {{ ligne.qte }} unités
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
