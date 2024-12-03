@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-stock',
   standalone: true, // Ajout de standalone: true
+  
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css'],
   imports: [ReactiveFormsModule, FormsModule, CommonModule] // Ajout des modules nécessaires
@@ -17,11 +18,18 @@ export class StockComponent implements OnInit {
   stocks: Stock[] = [];
   produits: Produit[] = []; // Liste des produits disponibles
   stockForm!: FormGroup;
-  lignesStock: LigneStock[] = [];
-  selectedProduit: Produit | null = null;
-  selectedQuantite: number = 0;
+  //lignesStock: LigneStock[] = [];
+  //selectedProduit: Produit | null = null;
+  //selectedQuantite: number = 0;
   isFormVisible = false;
   selectedStock: Stock | null = null;
+
+
+  selectedProduit: Produit = {} as Produit; // or an empty object if no product is selected
+//selectedQuantite: number = 0;
+
+  lignesStock: { produit: Produit; qte: number }[] = [];
+  selectedQuantite: number = 0;
 
   constructor(private stockService: StockService, private fb: FormBuilder) {}
 
@@ -33,6 +41,7 @@ export class StockComponent implements OnInit {
 
   loadStocks(): void {
     this.stockService.getStocks().subscribe((data) => (this.stocks = data));
+    console.log(this.stocks) ;
   }
 
   loadProduits(): void {
@@ -60,18 +69,20 @@ export class StockComponent implements OnInit {
   }
 
   addProduct(): void {
-    if (this.selectedProduit && this.selectedQuantite ) {
+    if (this.selectedProduit && this.selectedQuantite && this.selectedQuantite > 0) {
       this.lignesStock.push({
         produit: this.selectedProduit,
         qte: this.selectedQuantite,
       });
-      // Réinitialisation après ajout
-      this.selectedProduit = null;
+  
+      // Réinitialiser les champs après ajout
+      this.selectedProduit = {} as Produit;;
       this.selectedQuantite = 0;
     } else {
       alert('Veuillez sélectionner un produit et une quantité valide.');
     }
   }
+  
 
   removeProduct(ligne: LigneStock): void {
     const index = this.lignesStock.indexOf(ligne);
@@ -105,8 +116,9 @@ export class StockComponent implements OnInit {
     }
   }
 
+  
   onSubmit(): void {
-    if (this.stockForm.valid ) {
+    if (this.stockForm.valid) {
       const newStock: Stock = {
         ...this.stockForm.value,
         lignesStock: this.lignesStock.map((ligne) => ({
@@ -114,15 +126,15 @@ export class StockComponent implements OnInit {
           qte: ligne.qte,
         })),
       };
-
+  
       if (this.selectedStock) {
-        // Modifier un stock existant
+        // Modify existing stock
         this.stockService.updateStock(this.selectedStock.id!, newStock).subscribe((response) => {
           this.loadStocks();
           this.closeForm();
         });
       } else {
-        // Ajouter un nouveau stock
+        // Create new stock
         this.stockService.createStock(newStock).subscribe((response) => {
           this.stocks.push(response);
           this.closeForm();
@@ -132,4 +144,5 @@ export class StockComponent implements OnInit {
       alert('Veuillez remplir tous les champs requis.');
     }
   }
+  
 }

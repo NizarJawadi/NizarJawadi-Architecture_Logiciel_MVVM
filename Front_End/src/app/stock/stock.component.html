@@ -45,14 +45,15 @@
       <!-- Produits -->
       <h4>Produits</h4>
       <div class="d-flex align-items-center mb-3">
-        <select [(ngModel)]="selectedProduit" class="form-select me-2">
+        <select [(ngModel)]="selectedProduit" [ngModelOptions]="{standalone: true}" class="form-select me-2">
           <option *ngFor="let produit of produits" [ngValue]="produit">
             {{ produit.libelle }}
           </option>
         </select>
-        <input [(ngModel)]="selectedQuantite" type="number" class="form-control me-2" placeholder="Quantité" />
+        <input [(ngModel)]="selectedQuantite" [ngModelOptions]="{standalone: true}" type="number" class="form-control me-2" placeholder="Quantité" />
         <button type="button" (click)="addProduct()" class="btn btn-primary">Ajouter</button>
       </div>
+      
 
       <ul class="list-group mb-3">
         <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let ligne of lignesStock">
