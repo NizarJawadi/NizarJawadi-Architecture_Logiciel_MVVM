@@ -8,7 +8,7 @@ import com.architecture.tp.model.Produit;
 
 public interface ProduitRepository extends JpaRepository<Produit,Long>{
 
-    List<Produit> findByLibelleContainingAndPrixLessThanEqual(String libelle, Double prix);
+    List<Produit> findByLibelle(String libelle);
 
 
 }

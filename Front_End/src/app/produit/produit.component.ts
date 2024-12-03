@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { Produit } from '../../Model/Produit';
@@ -8,11 +8,12 @@ import { ProduitServices } from '../Services/ProduitServices';
 import { Categorie } from '../../Model/Categorie';
 import { CategorieComponent } from '../categorie/categorie.component';
 import { CategorieService } from '../Services/CategorieServices';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-produit',
   standalone: true,
-  imports: [ReactiveFormsModule , RouterModule , CommonModule  ] ,
+  imports: [ReactiveFormsModule , RouterModule , CommonModule,FormsModule  ] ,
    templateUrl: './produit.component.html',
   styleUrl: './produit.component.css'
 })
@@ -22,9 +23,9 @@ export class ProduitComponent {
   errorMessage = '';
 
   selectedImageName: string = ''; // Variable pour stocker le nom de l'image
-
   produits: Produit[] = [];
   categories: Categorie[] = [];
+  searchValue : string = "";
   constructor(private produitService: ProduitServices,
     private categorieServices: CategorieService,
     private fb: FormBuilder
@@ -51,7 +52,12 @@ export class ProduitComponent {
       imagePath: ['', Validators.required],  // Image Path peut être vide ou une valeur par défaut
       qteStock: [0, Validators.required] // Valeur par défaut pour stock
     });
-    
+
+  }
+  initDataSource(){
+    this.produitService.getProduits().subscribe( product => {
+      this.produits=product;
+   });
   }
 
 
@@ -66,29 +72,45 @@ export class ProduitComponent {
     }
   }
 
+  searchProduct(): void {
+    if (this.searchValue == '')
+    {
+      this.initDataSource();
+    }
+    else{
+      this.produitService.searchProduct(this.searchValue).subscribe({
+        next: (data) => {
+          this.produits = data;
+        },
+        error: (err) => {
+          console.error('produit non trouver !', err);
+        },
+      });
+    }
 
+  }
   onSubmit(): void {
     if (this.produitForm.valid) {
       // Vider les messages d'erreur ou de succès précédents
       this.successMessage = '';
       this.errorMessage = '';
-  
+
       const produitData = this.produitForm.value;  // Récupérer les données du formulaire
-  
+
       // Vérifier si categorieId est bien défini et si c'est un nombre
       if (produitData.categorieId) {
         produitData.categorieId = parseInt(produitData.categorieId, 10); // Assurez-vous que l'ID est de type number (Long)
       }
-  
+
       // Appel au service pour créer le produit
       this.produitService.createProduit(produitData).subscribe(
         (data) => {
           console.log(data);  // Assigner les produits reçus après l'ajout
           this.successMessage = 'Produit ajouté avec succès !'; // Afficher message de succès
-  
+
           // Ajouter le produit ajouté à la liste (optionnel)
           this.produits.push(data);
-  
+
           // Réinitialiser le formulaire après soumission réussie
           this.produitForm.reset();
         },
@@ -101,7 +123,27 @@ export class ProduitComponent {
       this.errorMessage = 'Veuillez remplir tous les champs requis.'; // Message d'erreur si le formulaire n'est pas valide
     }
   }
-  
+
+
+  deleteProduct(id: number) {
+    Swal.fire({
+      title: 'Êtes-vous sûr de supprimer ce produit?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#34c38f',
+      cancelButtonColor: '#f46a6a',
+      confirmButtonText: 'oui, supprimer!',
+      cancelButtonText: 'Annuler'
+    }).then(result => {
+      if (result.value) {
+
+        this.produitService.deleteProduct(id).subscribe(() => {
+          this.initDataSource();
+      })
+      }
+    })
+  }
+
 
 
   openModal(): void {
@@ -110,12 +152,12 @@ export class ProduitComponent {
       modal.setAttribute('aria-hidden', 'false'); // Affiche le modal et le rend accessible
     }
   }
-  
+
   closeModal(): void {
     const modal = document.getElementById('produitModal');
     if (modal) {
       modal.setAttribute('aria-hidden', 'true'); // Cache le modal et le rend inaccessible
     }
   }
-  
+
 }
