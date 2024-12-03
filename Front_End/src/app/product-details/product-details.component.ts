@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ProduitComponent } from '../produit/produit.component';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Produit } from '../../Model/Produit';
+import { ProduitServices } from '../Services/ProduitServices';
+import { ProduitComponent } from '../produit/produit.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,46 +10,38 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ProduitComponent ,CommonModule, RouterLink],
   templateUrl: './product-details.component.html',
-  styleUrl: './product-details.component.css'
+  styleUrl: './product-details.component.css',
 })
 export class ProductDetailsComponent implements OnInit {
   productId: number | null = null;
-  product: any = null;
+  product: Produit | null = null;
+  errorMessage: string | null = null;
 
-  produits = [
-    {
-      id: 1,
-      nom: 'Produit 1',
-      description: 'Description du produit 1.',
-      imageUrl: 'assets/images/b4.jpg'
-    },
-    {
-      id: 2,
-      nom: 'Produit 2',
-      description: 'Description du produit 2.',
-      imageUrl: 'assets/images/a3.jpg'
-    },
-    {
-      id: 3,
-      nom: 'Produit 3',
-      description: 'Description du produit 3.',
-      imageUrl: 'assets/images/a1.jpg'
-    },
-    {
-      id: 4,
-      nom: 'Produit 4',
-      description: 'Description du produit 4.',
-      imageUrl: 'assets/images/a2.jpg'
-    }
-  ];
-
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private produitService: ProduitServices
+  ) {}
 
   ngOnInit(): void {
-    // Récupère l'ID depuis l'URL
-    this.route.paramMap.subscribe(params => {
+    // Récupérer l'ID depuis l'URL
+    this.route.paramMap.subscribe((params) => {
       this.productId = Number(params.get('id'));
-      this.product = this.produits.find(p => p.id === this.productId);
+      if (this.productId) {
+        this.fetchProduct(this.productId);// Appeler le service pour récupérer le produit
+      }
     });
+  }
+
+  fetchProduct(id: number): void {
+    this.produitService.getProduitById(id).subscribe(
+      (product : any) => {
+        this.product = product; 
+        console.log(   product    ) // Assigner le produit récupéré
+      },
+      (error : any) => {
+        console.error('Erreur lors de la récupération du produit:', error);
+        this.errorMessage = 'Impossible de récupérer le produit.';
+      }
+    );
   }
 }

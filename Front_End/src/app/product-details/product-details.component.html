@@ -1,18 +1,40 @@
-
-
 <main class="main">
-    <div class="container mt-5">
-        <div *ngIf="product" class="card">
-          <img [src]="product.imageUrl" class="card-img-top" alt="{{ product.nom }}">
-          <div class="card-body" >
-            <h5 class="card-title">{{ product.nom }}</h5>
-            <p class="card-text">{{ product.description }}</p>
-            <button class="btn btn-secondary" [routerLink]="['/']">Retour</button>
-          </div>
-        </div>
-        <div *ngIf="!product" class="alert alert-danger">
-          Produit introuvable !
-        </div>
+  <div class="container mt-5">
+    <!-- Si le produit est disponible -->
+    <div *ngIf="product" class="card shadow-sm">
+      <img
+        [src]="'assets/images/' + product.imagePath" 
+        class="card-img-top"
+        alt="{{ product.nom || 'Image non disponible' }}"
+      />
+      <div class="card-body">
+        <h5 class="card-title text-primary">{{ product.nom }}</h5>
+        <p class="card-text">
+          <strong>Description:</strong> {{ product.description || 'Non spécifiée' }}
+        </p>
+        <p class="card-text">
+          <strong>Prix:</strong> {{ product.prix | currency: 'TND' }}
+        </p>
+        <p class="card-text">
+          <strong>Quantité en stock:</strong> {{ product.qteStock || 'Non spécifiée' }}
+        </p>
+        <button class="btn btn-secondary" [routerLink]="['/']">
+          Retour
+        </button>
       </div>
-      
+    </div>
+
+    <!-- Si le produit est introuvable -->
+    <div *ngIf="!product && !loading" class="alert alert-danger mt-3">
+      Produit introuvable !
+    </div>
+
+    <!-- Si le produit est en cours de chargement -->
+    <div *ngIf="loading" class="text-center mt-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <p>Chargement des détails du produit...</p>
+    </div>
+  </div>
 </main>
