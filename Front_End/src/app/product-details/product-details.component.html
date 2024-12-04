@@ -3,7 +3,7 @@
     <!-- Si le produit est disponible -->
     <div *ngIf="product" class="card shadow-sm">
       <img
-        [src]="'assets/images/' + product.imagePath" 
+        [src]="'assets/images/' + product.imagePath"
         class="card-img-top"
         alt="{{ product.libelle || 'Image non disponible' }}"
       />
@@ -39,7 +39,8 @@
       Produit introuvable !
     </div>
 
-    
+
+
   </div>
 
   <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">

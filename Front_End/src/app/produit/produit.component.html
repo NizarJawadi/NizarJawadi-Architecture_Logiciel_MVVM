@@ -2,39 +2,48 @@
   <div class="container py-4">
     <!-- Espace pour Recherche -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <span class="text-danger fw-bold">------------ ESPACE POUR RECHERCHE ------------</span>
+      <div class="col-sm-4">
+        <div class="search-box me-2 mb-2 d-inline-block">
+          <div class="position-relative">
+            <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search..." />
+           <button (click)="searchProduct()">
+            Chercher
+          </button>
+          </div>
+        </div>
+      </div>
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#produitModal">
         <i class="bi bi-bag-plus"></i> Ajouter Produit
       </button>
-      
-      
+
+
     </div>
 
     <!-- Liste des Produits -->
     <div class="row g-3" style="gap: 3cm;">
       <div class="col-lg-3 col-md-4 col-sm-6 mb-4" *ngFor="let produit of produits">
         <div class="card h-100">
-          <img 
-            [src]="'assets/images/' + produit.imagePath" 
-            class="card-img-top" 
-            alt="{{ produit.libelle }}" 
+          <img
+            [src]="'assets/images/' + produit.imagePath"
+            class="card-img-top"
+            alt="{{ produit.libelle }}"
             style="height: 200px; object-fit: cover;"
           >
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ produit.libelle }}</h5>
             <p class="card-text flex-grow-1">{{ produit.description }}</p>
             <div class="d-flex justify-content-between mt-2">
-              <button 
-                class="btn btn-primary me-2" 
+              <button
+                class="btn btn-primary me-2"
                 [routerLink]="['/details', produit.id]"
               >
                 Détails
               </button>
-              <button 
-                class="btn btn-danger" 
-                
-              >
-                Supprimer
+              <button
+                class="btn btn-danger"
+                (click)="deleteProduct(produit.id)"
+              ><i class="bx bxs-trash">Supprimer</i>
+
               </button>
             </div>
           </div>
@@ -70,7 +79,7 @@
               Le nom du produit est requis.
             </div>
           </div>
-        
+
           <div class="mb-3">
             <label for="description" class="form-label">
               <i class="bi bi-card-text"></i> Description
@@ -80,7 +89,7 @@
               La description est requise.
             </div>
           </div>
-        
+
           <div class="mb-3">
             <label for="prix" class="form-label">
               <i class="bi bi-currency-dollar"></i> Prix
@@ -90,7 +99,7 @@
               Le prix est requis et doit être supérieur à zéro.
             </div>
           </div>
-        
+
           <div class="mb-3">
             <label for="categorie" class="form-label">
               <i class="bi bi-tags-fill"></i> Catégorie
@@ -104,7 +113,7 @@
               La catégorie est requise.
             </div>
           </div>
-        
+
           <div class="mb-3">
             <label for="imagePath" class="form-label">
               <i class="bi bi-image"></i> Sélectionner une image
@@ -114,7 +123,7 @@
               L'image est requise.
             </div>
           </div>
-        
+
           <div class="mb-3">
             <label for="qteStock" class="form-label">
               <i class="bi bi-archive"></i> Quantité en Stock
@@ -124,12 +133,12 @@
               La quantité en stock est requise.
             </div>
           </div>
-        
+
           <button type="submit" class="btn btn-primary w-100" [disabled]="produitForm.invalid">
             <i class="bi bi-save"></i> Sauvegarder
           </button>
         </form>
-        
+
       </div>
 
       <!-- Footer du Modal -->

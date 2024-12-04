@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Produit } from '../../Model/Produit';
 import { StockService } from './stock.service';
@@ -11,7 +11,7 @@ import { FormBuilder } from '@angular/forms';
 export class ProduitServices {
   private apiUrl = 'http://localhost:8080/api/produits';
 
-  
+
   constructor(private http: HttpClient ) {}
 
   getProduits(): Observable<Produit[]> {
@@ -26,9 +26,22 @@ export class ProduitServices {
     return this.http.post<Produit>(this.apiUrl, produit);
   }
 
+
+  searchProduct(searchValue: string): Observable<Produit[]> {
+    const params = new HttpParams().set('searchValue',searchValue);
+    return this.http.get<Produit[]>(`${this.apiUrl}/search`, { params })
+  }
+  public deleteProduct(id: number):Observable<Produit>{
+    return this.http.delete<Produit>(`${this.apiUrl}/${id}`);
+  }
+
+
+
+
   updateProduit(id: number, produit: Produit): Observable<Produit> {
     return this.http.put<Produit>(`${this.apiUrl}/${id}`, produit);
   }
   
    
+
 }

@@ -1,5 +1,6 @@
 package com.architecture.tp.service;
 
+import java.io.Console;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +30,8 @@ public class ProduitService {
     public void delete(Long id) {
     produitRepository.deleteById(id);
     }
-
-    public List<Produit> searchByLibelleAndPrix(String libelle, Double prix) {
-        return produitRepository.findByLibelleContainingAndPrixLessThanEqual(libelle, prix);
+    public List<Produit> findByLabel(String libelle) {
+        return produitRepository.findByLibelle(libelle);
     }
 
 
