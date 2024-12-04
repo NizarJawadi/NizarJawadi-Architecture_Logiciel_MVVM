@@ -19,6 +19,12 @@
             "polyfills": [
               "zone.js"
             ],
+            "allowedCommonJsDependencies": [
+              "highcharts",
+              "highcharts/highmaps",
+              "highcharts/highstock",
+              "highcharts/highcharts-gantt"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",

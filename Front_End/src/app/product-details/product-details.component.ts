@@ -36,7 +36,7 @@ export class ProductDetailsComponent implements OnInit {
     this.produitService.getProduitById(id).subscribe(
       (product : any) => {
         this.product = product; 
-        console.log(   product    ) // Assigner le produit récupéré
+        console.log( product ) // Assigner le produit récupéré
       },
       (error : any) => {
         console.error('Erreur lors de la récupération du produit:', error);
