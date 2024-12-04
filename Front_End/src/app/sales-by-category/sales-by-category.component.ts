@@ -17,7 +17,7 @@ export class SalesByCategoryComponent implements OnInit {
       height: 325
     },
     title: {
-      text: 'Category wise sales'
+      text: 'Categories sales'
     },
     xAxis: {
       categories: [

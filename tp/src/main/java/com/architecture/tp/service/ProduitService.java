@@ -33,6 +33,23 @@ public class ProduitService {
     public List<Produit> findByLabel(String libelle) {
         return produitRepository.findByLibelle(libelle);
     }
+
+
+    public Produit updateProduit(Long id, Produit produitDetails) {
+        Optional<Produit> produitOptional = produitRepository.findById(id);
+        if (produitOptional.isPresent()) {
+            Produit produit = produitOptional.get();
+            produit.setLibelle(produitDetails.getLibelle());
+            produit.setDescription(produitDetails.getDescription());
+            produit.setPrix(produitDetails.getPrix());
+            produit.setImagePath(produitDetails.getImagePath());
+            produit.setQteStock(produitDetails.getQteStock());
+            produit.setCategorie(produitDetails.getCategorie());
+            return produitRepository.save(produit);
+        } else {
+            return null; 
+        }
+    }
    }
 
  

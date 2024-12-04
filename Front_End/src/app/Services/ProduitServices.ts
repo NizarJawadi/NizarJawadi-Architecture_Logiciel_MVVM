@@ -26,6 +26,7 @@ export class ProduitServices {
     return this.http.post<Produit>(this.apiUrl, produit);
   }
 
+
   searchProduct(searchValue: string): Observable<Produit[]> {
     const params = new HttpParams().set('searchValue',searchValue);
     return this.http.get<Produit[]>(`${this.apiUrl}/search`, { params })
@@ -35,5 +36,12 @@ export class ProduitServices {
   }
 
 
+
+
+  updateProduit(id: number, produit: Produit): Observable<Produit> {
+    return this.http.put<Produit>(`${this.apiUrl}/${id}`, produit);
+  }
+  
+   
 
 }

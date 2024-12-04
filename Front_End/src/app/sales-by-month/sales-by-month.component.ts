@@ -26,7 +26,7 @@ export class SalesByMonthComponent  implements OnInit{
       height: 325
     },
     title: {
-      text: 'Month wise sales'
+      text: 'Monthly sales'
     },
     xAxis: {
       categories: [
